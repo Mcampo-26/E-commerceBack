@@ -35,8 +35,8 @@ export const getProductos = async (req, res) => {
 export const updateProductos= async (req, res) => {
   try {
     const { id } = req.params;
-    const { name,description} = req.body;
-    await Productos.findOneAndUpdate({ _id: id }, { name,description});
+    const { name,description,price,categoria} = req.body;
+    await Productos.findOneAndUpdate({ _id: id }, { name,description,price,categoria});
     res.status(200).send("update");
   } catch (error) {
     res.status(400).send(error.message);
