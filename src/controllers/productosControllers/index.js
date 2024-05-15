@@ -4,8 +4,8 @@ import mongoose from "mongoose";
 
 export const createProductos= async (req, res)=>{
   try {
-    const { id,name, description,image,price, categoria } = req.body;
-    const nuevoProducto = new Productos({ id,name, description,image,price, categoria });
+    const { id,name, description,image1,image2,image3,image4,price, categoria } = req.body;
+    const nuevoProducto = new Productos({ id,name, description,image1,image2,image3,image4,price, categoria });
     await nuevoProducto.save();
     res.status(200).send("Productos creado");
   } catch (error) {
@@ -35,8 +35,8 @@ export const getProductos = async (req, res) => {
 export const updateProductos= async (req, res) => {
   try {
     const { id } = req.params;
-    const { name,description,price,categoria} = req.body;
-    await Productos.findOneAndUpdate({ _id: id }, { name,description,price,categoria});
+    const { name,description,price,image1,image2,image3,image4,categoria} = req.body;
+    await Productos.findOneAndUpdate({ _id: id }, { name,description,price,image1,image2,image3,image4,categoria});
     res.status(200).send("update");
   } catch (error) {
     res.status(400).send(error.message);
