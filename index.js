@@ -31,7 +31,7 @@ dbConnect()
     const server = app.listen(PORT, () => {
       console.log(`Servidor escuchando en el puerto ${PORT}`);
       // Abrir el navegador con la URL del servidor
-      open(`http://localhost:${PORT}`);
+      //open(`http://localhost:${PORT}`);
     });
   })
   .catch(error => {
