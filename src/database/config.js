@@ -6,7 +6,7 @@ dotenv.config();
 
 export const dbConnect = async () => {
     try {
-        const uri = 'mongodb+srv://Mauricio26:Vale2525@cluster0.pb91m.mongodb.net/Ecomerce?retryWrites=true&w=majority' // Obtener la URI de conexión desde la variable de entorno
+        const uri = 'mongodb+srv://Mauricio26:Vale2525@cluster0.pb91m.mongodb.net/Ecomerce?retryWrites=true&w=majority' 
         if (!uri) {
             throw new Error('La URI de conexión no está definida en el archivo .env');
         }
