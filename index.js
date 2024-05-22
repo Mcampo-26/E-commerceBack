@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { dbConnect } from './src/database/config.js';
 import open from 'open';
-import routerUsers from './src/routes/Users/index.js';
+import routerCategoria from './src/routes/Categorias/index.js'; 
 import routerProductos from './src/routes/Productos/index.js';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -38,5 +38,5 @@ dbConnect()
     console.error('Error al conectar con la base de datos:', error);
   });
 
-app.use('/users', routerUsers);
 app.use('/Productos', routerProductos);
+app.use('/Categoria', routerCategoria);
