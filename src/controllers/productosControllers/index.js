@@ -14,7 +14,7 @@ export const createProductos = async (req, res) => {
 
 export const getProductos = async (req, res) => {
   try {
-    const productos = await Productos.find();
+    const productos = await Productos.find().populate('categoria');
     if (!productos || productos.length === 0) {
       return res.status(404).json({ error: 'No se encontraron productos' });
     }
