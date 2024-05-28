@@ -6,7 +6,8 @@ import routerCategoria from './src/routes/Categorias/index.js';
 import routerProductos from './src/routes/Productos/index.js';
 import morgan from 'morgan';
 import cors from 'cors';
-
+import routerCarrito from './src/routes/Carrito/index.js';
+import routerUser from './src/routes/Usuarios/index.js';
 // Configurar dotenv para leer el archivo .env
 dotenv.config();
 
@@ -40,3 +41,5 @@ dbConnect()
 
 app.use('/Productos', routerProductos);
 app.use('/Categoria', routerCategoria);
+app.use('/Carrito', routerCarrito);
+app.use('/Usuarios', routerUser);
