@@ -4,10 +4,10 @@ import { dbConnect } from './src/database/config.js';
 import open from 'open';
 import routerCategoria from './src/routes/Categorias/index.js'; 
 import routerProductos from './src/routes/Productos/index.js';
-import morgan from 'morgan';
-import cors from 'cors';
 import routerCarrito from './src/routes/Carrito/index.js';
 import routerUser from './src/routes/Usuarios/index.js';
+import morgan from 'morgan';
+import cors from 'cors';
 // Configurar dotenv para leer el archivo .env
 dotenv.config();
 
