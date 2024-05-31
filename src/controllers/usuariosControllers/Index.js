@@ -2,29 +2,26 @@ import Usuario from '../../models/Usuario.js';
 import bcrypt from 'bcrypt';
 
 
-
-
-
-
 export const loginUsuario = async (req, res) => {
-  console.log("Datos recibidos:", req.body);
-  try {
-    const { email, password } = req.body;
-    const usuario = await Usuario.findOne({ email });
-    console.log("Usuario encontrado:", usuario);
+    console.log("Datos recibidos:", req.body);
+    try {
+        const { email, password } = req.body;
+        const usuario = await Usuario.findOne({ email });
+        console.log("Usuario encontrado:", usuario);
 
-    if (usuario && await bcrypt.compare(password, usuario.password)) {
-      console.log("Contraseña correcta");
-      res.json({ message: "Login exitoso" });
-    } else {
-      console.log("Contraseña incorrecta");
-      res.status(401).json({ message: "Credenciales inválidas" });
+        if (usuario && await bcrypt.compare(password, usuario.password)) {
+            console.log("Contraseña correcta");
+            res.json({ message: "Login exitoso", usuario }); // Asegúrate de incluir usuario aquí
+        } else {
+            console.log("Contraseña incorrecta");
+            res.status(401).json({ message: "Credenciales inválidas" });
+        }
+    } catch (error) {
+        console.error("Error durante el login:", error);
+        res.status(500).send(error.message);
     }
-  } catch (error) {
-    console.error("Error durante el login:", error);
-    res.status(500).send(error.message);
-  }
-};
+}
+;
 
 
 
