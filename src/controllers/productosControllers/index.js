@@ -27,8 +27,11 @@ export const getProductos = async (req, res) => {
 export const updateProductos = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, image1, image2, image3, image4, detalles, categoria } = req.body;
-    await Productos.findOneAndUpdate({ _id: id }, { name, description, price, image1, image2, image3, image4, detalles, categoria });
+    const { name, description, price, image1, image2, image3, image4, detalles, categoria, isOferta } = req.body;
+    await Productos.findOneAndUpdate(
+      { _id: id },
+      { name, description, price, image1, image2, image3, image4, detalles, categoria, isOferta }
+    );
     res.status(200).send("Producto actualizado");
   } catch (error) {
     res.status(400).send(error.message);
@@ -46,5 +49,39 @@ export const deleteProductosById = async (req, res) => {
   } catch (error) {
     console.error('Error al eliminar producto:', error);
     res.status(500).json({ error: 'Ocurrió un error al eliminar el producto' });
+  }
+};
+
+export const toggleOferta = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const producto = await Productos.findById(id);
+    if (!producto) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+
+    producto.isOferta = !producto.isOferta;
+    await producto.save();
+
+    res.status(200).json(producto);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+export const toggleFavorite = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const producto = await Productos.findById(id);
+    if (!producto) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+
+    producto.isFavorite = !producto.isFavorite;
+    await producto.save();
+
+    res.status(200).json(producto);
+  } catch (error) {
+    res.status(400).send(error.message);
   }
 };

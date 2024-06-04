@@ -10,7 +10,9 @@ const ProductosSchema = new Schema({
     image4: { type: String },
     price: { type: String, required: [true, "Precio es requerido"] },
     detalles: { type: String, required: [true, "Detalles es requerido"] },
-    categoria: { type: Schema.Types.ObjectId, ref: 'Categoria'}
+    categoria: { type: Schema.Types.ObjectId, ref: 'Categoria'},
+    isOferta: { type: Boolean, default: false },
+    isFavorite: { type: Boolean, default: false },
 });
 
 export default model("Productos", ProductosSchema);
