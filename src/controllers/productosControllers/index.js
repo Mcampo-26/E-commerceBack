@@ -27,10 +27,10 @@ export const getProductos = async (req, res) => {
 export const updateProductos = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, image1, image2, image3, image4, detalles, categoria, isOferta } = req.body;
+    const { name, description, price, image1, image2, image3, image4, detalles, categoria, isOferta, descuentoPorcentaje} = req.body;
     await Productos.findOneAndUpdate(
       { _id: id },
-      { name, description, price, image1, image2, image3, image4, detalles, categoria, isOferta }
+      { name, description, price, image1, image2, image3, image4, detalles, categoria, isOferta,descuentoPorcentaje }
     );
     res.status(200).send("Producto actualizado");
   } catch (error) {

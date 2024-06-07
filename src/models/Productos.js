@@ -13,6 +13,7 @@ const ProductosSchema = new Schema({
     categoria: { type: Schema.Types.ObjectId, ref: 'Categoria'},
     isOferta: { type: Boolean, default: false },
     isFavorite: { type: Boolean, default: false },
+    descuentoPorcentaje: { type: Number, default: 0 }
 });
 
 export default model("Productos", ProductosSchema);
