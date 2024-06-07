@@ -6,8 +6,14 @@ import routerCategoria from './src/routes/Categorias/index.js';
 import routerProductos from './src/routes/Productos/index.js';
 import routerCarrito from './src/routes/Carrito/index.js';
 import routerUser from './src/routes/Usuarios/index.js';
+import routerFavoritos from './src/routes/Favoritos/index.js';
 import morgan from 'morgan';
 import cors from 'cors';
+
+// Importa los modelos
+import Productos from './src/models/Productos.js';
+import Favoritos from './src/models/Favoritos.js';
+
 // Configurar dotenv para leer el archivo .env
 dotenv.config();
 
@@ -43,3 +49,4 @@ app.use('/Productos', routerProductos);
 app.use('/Categoria', routerCategoria);
 app.use('/Carrito', routerCarrito);
 app.use('/Usuarios', routerUser);
+app.use('/Favoritos', routerFavoritos);

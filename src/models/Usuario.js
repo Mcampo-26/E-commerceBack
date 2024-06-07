@@ -9,7 +9,9 @@ const UsuarioSchema = new Schema({
   direccion1: { type: String },
   direccion2: { type: String },
   telefono: { type: String },
-  role: { type: String, default: 'usuario', enum: ['usuario', 'admin'] }
+  role: { type: String, default: 'usuario', enum: ['usuario', 'admin'] },
+
+  favorites: [{ type: Schema.Types.ObjectId, ref: 'Productos' }] // Campo para almacenar los IDs de los productos favoritos
 });
 
 export default model("Usuario", UsuarioSchema);

@@ -7,13 +7,13 @@ export const loginUsuario = async (req, res) => {
     try {
         const { email, password } = req.body;
         const usuario = await Usuario.findOne({ email });
-        console.log("Usuario encontrado:", usuario);
+     
 
         if (usuario && await bcrypt.compare(password, usuario.password)) {
             console.log("Contraseña correcta");
             res.json({ message: "Login exitoso", usuario }); // Asegúrate de incluir usuario aquí
         } else {
-            console.log("Contraseña incorrecta");
+          
             res.status(401).json({ message: "Credenciales inválidas" });
         }
     } catch (error) {
@@ -22,6 +22,15 @@ export const loginUsuario = async (req, res) => {
     }
 }
 ;
+export const logoutUsuario = async (req, res) => {
+  try {
+    // Puedes incluir cualquier lógica adicional aquí, como limpiar la sesión del usuario
+    res.clearCookie('tu_cookie_de_sesion'); // Ejemplo de cómo limpiar una cookie de sesión
+    res.status(200).json({ message: 'Sesión cerrada exitosamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Ocurrió un error al cerrar la sesión' });
+  }
+};
 
 
 
@@ -74,5 +83,45 @@ export const deleteUsuarioById = async (req, res) => {
     res.status(200).json({ message: 'Usuario eliminado exitosamente' });
   } catch (error) {
     res.status(500).json({ error: 'Ocurrió un error al eliminar el usuario' });
+  }
+};
+
+
+
+export const addToFavorites = async (req, res) => {
+  try {
+      const { userId, productId } = req.body;
+      const usuario = await Usuario.findById(userId);
+
+      if (!usuario) {
+          return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+
+      // Agregar el ID del producto a la lista de favoritos del usuario
+      usuario.favorites.push(productId);
+      await usuario.save();
+
+      res.status(200).json({ message: 'Producto agregado a favoritos correctamente', usuario });
+  } catch (error) {
+      res.status(500).json({ error: 'Ocurrió un error al agregar el producto a favoritos' });
+  }
+};
+
+export const removeFromFavorites = async (req, res) => {
+  try {
+      const { userId, productId } = req.body;
+      const usuario = await Usuario.findById(userId);
+
+      if (!usuario) {
+          return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+
+      // Remover el ID del producto de la lista de favoritos del usuario
+      usuario.favorites = usuario.favorites.filter(favoriteId => favoriteId !== productId);
+      await usuario.save();
+
+      res.status(200).json({ message: 'Producto eliminado de favoritos correctamente', usuario });
+  } catch (error) {
+      res.status(500).json({ error: 'Ocurrió un error al eliminar el producto de favoritos' });
   }
 };
