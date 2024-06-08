@@ -10,9 +10,7 @@ import routerFavoritos from './src/routes/Favoritos/index.js';
 import morgan from 'morgan';
 import cors from 'cors';
 
-// Importa los modelos
-import Productos from './src/models/Productos.js';
-import Favoritos from './src/models/Favoritos.js';
+
 
 // Configurar dotenv para leer el archivo .env
 dotenv.config();

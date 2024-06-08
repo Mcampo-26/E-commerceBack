@@ -1,13 +1,13 @@
 import { Schema, model } from "mongoose";
 
-const CarritoSchema = new Schema({
+const CarritoItemSchema = new Schema({
   product: { type: Schema.Types.ObjectId, ref: 'Productos', required: true },
   quantity: { type: Number, required: true, default: 1 }
 });
 
-const Carrito = new Schema({
+const CarritoSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  items: [CarritoSchema],
+  items: [CarritoItemSchema],
   total: { type: Number, required: true, default: 0 }
 });
 
