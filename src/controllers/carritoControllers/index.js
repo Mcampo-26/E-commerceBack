@@ -1,14 +1,14 @@
-
-import Cart from '../../models/Carrito.js';
+import Carrito from '../../models/Carrito.js';
 import Productos from "../../models/Productos.js";
 
 export const getCarrito = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
-    if (!cart) {
+    const { userId } = req.params;
+    const carrito = await Carrito.findOne({ user: userId }).populate('items.product');
+    if (!carrito) {
       return res.status(404).json({ error: 'No se encontró el carrito' });
     }
-    res.status(200).json(cart);
+    res.status(200).json(carrito);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -16,11 +16,12 @@ export const getCarrito = async (req, res) => {
 
 export const createCarrito = async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
-    let cart = await Cart.findOne({ user: req.user._id });
+    const { userId, productId, quantity } = req.body;
+    console.log("Datos recibidos:", { userId, productId, quantity });
+    let carrito = await Carrito.findOne({ user: userId });
 
-    if (!cart) {
-      cart = new Cart({ user: req.user._id, items: [] });
+    if (!carrito) {
+      carrito = new Carrito({ user: userId, items: [] });
     }
 
     const product = await Productos.findById(productId);
@@ -28,36 +29,37 @@ export const createCarrito = async (req, res) => {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
-    const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+    const itemIndex = carrito.items.findIndex(item => item.product.toString() === productId);
     if (itemIndex > -1) {
-      cart.items[itemIndex].quantity += quantity;
+      carrito.items[itemIndex].quantity += quantity;
     } else {
-      cart.items.push({ product: productId, quantity });
+      carrito.items.push({ product: productId, quantity });
     }
 
-    cart.total += product.price * quantity;
-    await cart.save();
-    res.status(200).json(cart);
+    carrito.total += product.price * quantity;
+    await carrito.save();
+    res.status(200).json(carrito);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-export const deleteCarritoById = async (req, res) => {
+export const deleteCarrito = async (req, res) => {
   try {
-    const { productId } = req.body;
-    const cart = await Cart.findOne({ user: req.user._id });
+    const { userId, productId } = req.params;  // Obtener los IDs de los parámetros de la URL
+    const carrito = await Carrito.findOne({ user: userId });
 
-    if (!cart) {
+    if (!carrito) {
       return res.status(404).json({ error: 'Carrito no encontrado' });
     }
 
-    const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+    const itemIndex = carrito.items.findIndex(item => item.product.toString() === productId);
     if (itemIndex > -1) {
-      cart.total -= cart.items[itemIndex].quantity * cart.items[itemIndex].product.price;
-      cart.items.splice(itemIndex, 1);
-      await cart.save();
-      return res.status(200).json(cart);
+      const product = await Productos.findById(productId);
+      carrito.total -= carrito.items[itemIndex].quantity * product.price;
+      carrito.items.splice(itemIndex, 1);
+      await carrito.save();
+      return res.status(200).json(carrito);
     }
 
     res.status(404).json({ error: 'Producto no encontrado en el carrito' });
@@ -66,20 +68,23 @@ export const deleteCarritoById = async (req, res) => {
   }
 };
 
+
+
 export const updateCarrito = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
-    const cart = await Cart.findOne({ user: req.user._id });
+    const { id } = req.params;
+    const carrito = await Carrito.findById(id);
 
-    if (!cart) {
+    if (!carrito) {
       return res.status(404).json({ error: 'Carrito no encontrado' });
     }
 
-    const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+    const itemIndex = carrito.items.findIndex(item => item.product.toString() === productId);
     if (itemIndex > -1) {
-      cart.items[itemIndex].quantity = quantity;
-      await cart.save();
-      return res.status(200).json(cart);
+      carrito.items[itemIndex].quantity = quantity;
+      await carrito.save();
+      return res.status(200).json(carrito);
     }
 
     res.status(404).json({ error: 'Producto no encontrado en el carrito' });
