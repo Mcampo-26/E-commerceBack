@@ -27,16 +27,18 @@ export const getProductos = async (req, res) => {
 export const updateProductos = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, image1, image2, image3, image4, detalles, categoria, isOferta, descuentoPorcentaje} = req.body;
-    await Productos.findOneAndUpdate(
+    const { name, description, price, image1, image2, image3, image4, detalles, categoria, isOferta, descuentoPorcentaje } = req.body;
+    const updatedProducto = await Productos.findOneAndUpdate(
       { _id: id },
-      { name, description, price, image1, image2, image3, image4, detalles, categoria, isOferta,descuentoPorcentaje }
+      { name, description, price, image1, image2, image3, image4, detalles, categoria, isOferta, descuentoPorcentaje },
+      { new: true }
     );
-    res.status(200).send("Producto actualizado");
+    res.status(200).json(updatedProducto);
   } catch (error) {
     res.status(400).send(error.message);
   }
 };
+
 
 export const deleteProductosById = async (req, res) => {
   try {

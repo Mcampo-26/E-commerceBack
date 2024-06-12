@@ -16,7 +16,7 @@ export const getCategorias = async (req, res) => {
   try {
     const categorias = await Categoria.find(); // Busca todas las categorías en la base de datos
     res.status(200).json(categorias);
-    console.log(categorias); // Envía las categorías como respuesta
+    console.log("soy categorias",categorias); // Envía las categorías como respuesta
   } catch (error) {
     res.status(400).send(error.message); // Maneja los errores
   }
