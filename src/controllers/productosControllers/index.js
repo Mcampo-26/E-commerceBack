@@ -14,11 +14,24 @@ export const createProductos = async (req, res) => {
 
 export const getProductos = async (req, res) => {
   try {
-    const productos = await Productos.find().populate('categoria');
+    const { page = 1, limit = 10 } = req.query;
+    const productos = await Productos.find()
+      .skip((page - 1) * limit)
+      .limit(Number(limit))
+      .populate('categoria');
+    
+    const total = await Productos.countDocuments();
+
     if (!productos || productos.length === 0) {
       return res.status(404).json({ error: 'No se encontraron productos' });
     }
-    res.status(200).json(productos);
+
+    res.status(200).json({
+      productos,
+      total,
+      totalPages: Math.ceil(total / limit),
+      currentPage: Number(page),
+    });
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -38,7 +51,6 @@ export const updateProductos = async (req, res) => {
     res.status(400).send(error.message);
   }
 };
-
 
 export const deleteProductosById = async (req, res) => {
   try {
