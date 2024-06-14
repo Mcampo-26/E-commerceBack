@@ -14,13 +14,30 @@ export const createCategoria = async (req, res) => {
 // Controlador para obtener todas las categorías
 export const getCategorias = async (req, res) => {
   try {
-    const categorias = await Categoria.find(); // Busca todas las categorías en la base de datos
-    res.status(200).json(categorias);
-    console.log("soy categorias",categorias); // Envía las categorías como respuesta
+    const { page = 1, limit = 10 } = req.query; // Desestructura los parámetros de consulta
+    const categorias = await Categoria.find()
+      .skip((page - 1) * limit) // Salta los documentos anteriores según la página y el límite
+      .limit(Number(limit)); // Limita el número de documentos devueltos según el límite
+
+    const total = await Categoria.countDocuments(); // Cuenta el número total de documentos
+
+    console.log('Categorías obtenidas del servidor:', categorias);
+
+    res.status(200).json({
+      categorias,
+      total,
+      totalPages: Math.ceil(total / limit),
+      currentPage: Number(page),
+    });
   } catch (error) {
+    console.error('Error al obtener categorías:', error);
     res.status(400).send(error.message); // Maneja los errores
   }
 };
+
+
+
+
 
 export const updateCategoria = async (req, res) => {
   try {
