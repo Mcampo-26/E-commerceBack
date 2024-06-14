@@ -35,6 +35,14 @@ export const getCategorias = async (req, res) => {
   }
 };
 
+export const getAllCategorias = async (req, res) => {
+  try {
+    const categorias = await Categoria.find();
+    res.status(200).json(categorias);
+  } catch (error) {
+    res.status(400).send(error.message); // Maneja los errores
+  }
+};
 
 
 
