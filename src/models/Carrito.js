@@ -6,9 +6,8 @@ const CarritoItemSchema = new Schema({
 });
 
 const CarritoSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
   items: [CarritoItemSchema],
   total: { type: Number, required: true, default: 0 }
 });
-
 export default model("Carrito", CarritoSchema);

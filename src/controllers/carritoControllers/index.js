@@ -3,42 +3,43 @@ import Productos from "../../models/Productos.js";
 
 
 export const getCarrito = async (req, res) => {
-  try {
-    console.log('getCarrito called');
-    const { userId } = req.params;
-    console.log('User ID:', userId);
+  const { userId } = req.params;
 
+  try {
+    console.log('Buscando carrito para User ID:', userId);
+
+    // Buscar el carrito asociado al usuario
     const carrito = await Carrito.findOne({ user: userId }).populate('items.product');
-    console.log('Carrito encontrado:', carrito);
 
     if (!carrito) {
-      console.log('No se encontró el carrito');
-      return res.status(404).json({ error: 'No se encontró el carrito' });
+      console.log('Carrito no encontrado para User ID:', userId);
+      return res.status(404).json({ 
+        message: 'No se encontró el carrito para este usuario.' 
+      });
     }
 
-    // Filtrar los productos nulos del carrito
+    // Filtrar items que tengan productos válidos
     const filteredItems = carrito.items.filter(item => item.product !== null);
-    console.log('Filtered Items:', filteredItems);
 
-    // Calcular la cantidad total de items en el carrito
+    // Calcular la cantidad total de items
     const totalItems = filteredItems.reduce((acc, item) => acc + item.quantity, 0);
-    console.log('Total Items:', totalItems);
 
-    // Crear un nuevo objeto de carrito con los items filtrados y la cantidad total de items
+    // Crear un objeto con los items filtrados y el total
     const filteredCarrito = {
       ...carrito.toObject(),
       items: filteredItems,
-      totalItems: totalItems,  // Agregar la cantidad total de items al carrito
+      totalItems: totalItems,
     };
 
-    console.log('Filtered Carrito:', filteredCarrito);
+    console.log('Carrito final:', filteredCarrito);
 
     res.status(200).json(filteredCarrito);
   } catch (error) {
-    console.log('Error:', error.message);
-    res.status(500).json({ error: error.message });
+    console.error('Error al obtener el carrito:', error.message);
+    res.status(500).json({ error: 'Error interno del servidor', details: error.message });
   }
 };
+
 
 
 
@@ -75,27 +76,30 @@ export const createCarrito = async (req, res) => {
 
 export const deleteCarrito = async (req, res) => {
   try {
-    const { userId, productId } = req.params;  // Obtener los IDs de los parámetros de la URL
+    const { userId, productId } = req.params; // Obtener IDs de usuario y producto
     const carrito = await Carrito.findOne({ user: userId });
 
     if (!carrito) {
-      return res.status(404).json({ error: 'Carrito no encontrado' });
+      return res.status(404).json({ error: "Carrito no encontrado" });
     }
 
-    const itemIndex = carrito.items.findIndex(item => item.product.toString() === productId);
+    // Buscar el índice del producto y eliminarlo
+    const itemIndex = carrito.items.findIndex(
+      (item) => item.product.toString() === productId
+    );
     if (itemIndex > -1) {
-      const product = await Productos.findById(productId);
-      carrito.total -= carrito.items[itemIndex].quantity * product.price;
-      carrito.items.splice(itemIndex, 1);
+      carrito.items.splice(itemIndex, 1); // Eliminar el producto
       await carrito.save();
-      return res.status(200).json(carrito);
+      return res.status(200).json(carrito); // Enviar el carrito actualizado
     }
 
-    res.status(404).json({ error: 'Producto no encontrado en el carrito' });
+    res.status(404).json({ error: "Producto no encontrado en el carrito" });
   } catch (error) {
+    console.error("Error al eliminar producto del carrito:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 
